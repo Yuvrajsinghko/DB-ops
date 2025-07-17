@@ -6,27 +6,27 @@ from mysql.connector import Error, IntegrityError, ProgrammingError, InterfaceEr
 
 
 FAKE=Faker()
-try:
-    mydb=mysql.connector.connect(
+
+mydb=mysql.connector.connect(
     host="localhost",
     user="yuvraj",
     passwd="root69",
     database='greendb'
-    )
-    mycursor=mydb.cursor()
-    print("Connection Successfull")
+)
+mycursor=mydb.cursor()
+print("Connection Successfull")
     
 
-except mysql.connector.ProgrammingError as pe:
-    print("SQL Syntax Error:",pe)
-except mysql.connector.IntegrityError as i:
-    print("Constraint Violation:",i)
-except mysql.connector.InterfaceError as pr:
-    print("Connection Error:",pr)
-except Error as e:
-    print("General DB Error:",e)
-except Exception as e:
-    print("Unexpected Error:",e)
+# except mysql.connector.ProgrammingError as pe:
+#     print("SQL Syntax Error:",pe)
+# except mysql.connector.IntegrityError as i:
+#     print("Constraint Violation:",i)
+# except mysql.connector.InterfaceError as pr:
+#     print("Connection Error:",pr)
+# except Error as e:
+#     print("General DB Error:",e)
+# except Exception as e:
+#     print("Unexpected Error:",e)
 
 
 
