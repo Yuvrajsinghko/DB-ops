@@ -8,7 +8,7 @@
       <ul>
         <li>Make sure python is installed:To check:<b>python3 --version</b></li>
         <li>Command to create virtual environment:<b>python3 -m venv venv</b</li>
-        <li>Activate your virtual environment:<b>source venv/bin/activate for linux</b><br><b>For windows:venv/Scripts/activate</b></li>
+        <li>Activate your virtual environment:<b>source venv/bin/activate for linux</b>||<b>For windows:venv/Scripts/activate</b></li>
         <li>To deactivate your virtual environment:deactivate</li>
       </ul>
     </li>
