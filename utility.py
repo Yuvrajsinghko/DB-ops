@@ -163,21 +163,21 @@ def daily_entry(user_input):
 
 
 # This function is used to populate comparison table
-def comparison_insert(user_input):
-    daily_ref_list = ids_capture("daily")
-
-    for t in range(user_input):
-        daily_ids_ref = daily_ref_list[t]
-        prev_score = round(random.uniform(15, 50), 2)
-        curr_score = round(random.uniform(10, 45), 2)
-        change_percent = round(((prev_score - curr_score) / prev_score) * 100, 2)
-        feedback = FAKE.random_element(['Improved', 'Need Improvement', 'No Change Detected'])
-        # date_check= datetime.now().date() - timedelta(days=random.randint(1, 20))
-        mycursor.execute(
-            "INSERT INTO ComparisonTab(daily_en_id,previous_score,current_score,change_percent,feedback,date_checked)VALUES(%s,%s,%s,%s,%s,%s)",
-            (daily_ids_ref, prev_score, curr_score, change_percent, feedback, today))
-    mydb.commit()
-    print("Task completed successfully:COMPARISON DETAILS")
+# def comparison_insert(user_input):
+#     daily_ref_list = ids_capture("daily")
+#
+#     for t in range(user_input):
+#         daily_ids_ref = daily_ref_list[t]
+#         prev_score = round(random.uniform(15, 50), 2)
+#         curr_score = round(random.uniform(10, 45), 2)
+#         change_percent = round(((prev_score - curr_score) / prev_score) * 100, 2)
+#         feedback = FAKE.random_element(['Improved', 'Need Improvement', 'No Change Detected'])
+#         # date_check= datetime.now().date() - timedelta(days=random.randint(1, 20))
+#         mycursor.execute(
+#             "INSERT INTO ComparisonTab(daily_en_id,previous_score,current_score,change_percent,feedback,date_checked)VALUES(%s,%s,%s,%s,%s,%s)",
+#             (daily_ids_ref, prev_score, curr_score, change_percent, feedback, today))
+#     mydb.commit()
+#     print("Task completed successfully:COMPARISON DETAILS")
 
 
 # This function is used to populate tips table
@@ -281,15 +281,16 @@ def create_tab():
 
     # 4. Tables referencing DailyEntry
     mycursor.execute("""
-    CREATE TABLE ComparisonTab(
-        comparision_id INT AUTO_INCREMENT PRIMARY KEY,
-        daily_en_id INT NOT NULL,
-        previous_score FLOAT NOT NULL,
-        current_score FLOAT NOT NULL,
-        change_percent FLOAT NOT NULL,
-        feedback VARCHAR(50),
-        date_checked DATE,
-        FOREIGN KEY (daily_en_id) REFERENCES DailyEntry(daily_entry_id) ON DELETE CASCADE
+    CREATE TABLE Employee_Points(
+        emp_point_id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL UNIQUE,
+        daily_entry_id INT NOT NULL,
+        date_earned DATE,
+        reason VARCHAR(100),
+        
+        FOREIGN KEY (daily_entry_id) REFERENCES DailyEntry(daily_id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES DailyEntry(user_id) ON DELETE CASCADE,
+
     )
     """)
     mycursor.execute("""
@@ -299,7 +300,7 @@ def create_tab():
         daily_ref INT NOT NULL,
         tips VARCHAR(255),
         FOREIGN KEY(user_ref) REFERENCES SignupDetails(id) ON DELETE CASCADE,
-        FOREIGN KEY (daily_ref) REFERENCES DailyEntry(daily_entry_id) ON DELETE CASCADE
+        FOREIGN KEY (daily_ref) REFERENCES DailyEntry(daily_id) ON DELETE CASCADE
     )
     """)
 
@@ -315,6 +316,6 @@ def populate_tables():
     utility_entry(user_input)
     lifestylehabits_entry(user_input)
     daily_entry(user_input)
-    comparison_insert(user_input)
+    # comparison_insert(user_input)
     tips_insert(user_input)
     print(f"{user_input} entries added.Task Complete.")
