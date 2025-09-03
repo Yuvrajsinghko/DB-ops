@@ -108,19 +108,19 @@ def diet_insert(user_input):
 
 
 # This function is used to populate utility details related table
-def utility_entry(user_input):
-    ref_ids = ids_capture("login")
-
-    for j in range(user_input):
-        ref_utility = ref_ids[j]
-        elec = random.randint(5, 10)
-        water = random.randint(50, 135)
-        gas = random.uniform(0.5, 1)
-        mycursor.execute(
-            "INSERT INTO UtilityUsage(ut_ref_id,electricity_consumption,water_consumption,gas_usage)VALUES(%s,%s,%s,%s)",
-            (ref_utility, elec, water, gas))
-    mydb.commit()
-    print("Task completed successfully:UTILITY DETAILS")
+# def utility_entry(user_input):
+#     ref_ids = ids_capture("login")
+#
+#     for j in range(user_input):
+#         ref_utility = ref_ids[j]
+#         elec = random.randint(5, 10)
+#         water = random.randint(50, 135)
+#         gas = random.uniform(0.5, 1)
+#         mycursor.execute(
+#             "INSERT INTO UtilityUsage(ut_ref_id,electricity_consumption,water_consumption,gas_usage)VALUES(%s,%s,%s,%s)",
+#             (ref_utility, elec, water, gas))
+#     mydb.commit()
+#     print("Task completed successfully:UTILITY DETAILS")
 
 
 # This function is used to populate lifestylehabits related info table
@@ -220,79 +220,65 @@ def create_tab():
     mycursor.execute("""
     CREATE TABLE TransportDetails(
         transport_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-        tt_id INTEGER,
+        user_id INTEGER NOT NULL,
         mode_of_transport VARCHAR(150),
         distance_travelled FLOAT,
-        fuel_type VARCHAR(50),
-        years_owned INTEGER,
-        FOREIGN KEY (tt_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
+        work_location VARCHAR(25),
+        FOREIGN KEY (user_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
     )
     """)
     mycursor.execute("""
     CREATE TABLE DietDetails(
         diet_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-        diet_ref_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
         diet_type VARCHAR(20),
-        meals_per_day INTEGER,
         food_source VARCHAR(20),
-        FOREIGN KEY (diet_ref_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
-    )
-    """)
-    mycursor.execute("""
-    CREATE TABLE UtilityUsage(
-        utility_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-        ut_ref_id INTEGER NOT NULL,
-        electricity_consumption FLOAT,
-        water_consumption INTEGER,
-        gas_usage INTEGER,
-        FOREIGN KEY (ut_ref_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
+        FOREIGN KEY (user_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
     )
     """)
     mycursor.execute("""
     CREATE TABLE LifestyleHabits(
         lifestyle_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-        life_ref_id INTEGER NOT NULL,
-        plastic_item_used INTEGER,
-        alcohol_consume INTEGER,
-        smoking INTEGER,
-        gym_hours INTEGER,
-        FOREIGN KEY (life_ref_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
+        user_id INTEGER NOT NULL,
+        digital_footprint VARCHAR(30),
+        printing_today VARCHAR(30),
+        FOREIGN KEY (user_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
+    )
+    """)
+    mycursor.execute("""
+    CREATE TABLE Employee_Points(
+        emp_point_id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        daily_entry_id INT NOT NULL,
+        points_earned INT NOT NULL DEFAULT 0,
+        date_earned DATE,
+        reason VARCHAR(100),
+        FOREIGN KEY (user_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
     )
     """)
 
     # 3. DailyEntry (references all above)
     mycursor.execute("""
     CREATE TABLE DailyEntry (
-        daily_entry_id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
+        daily_id INT AUTO_INCREMENT PRIMARY KEY,
+        signup_ref_id INT NOT NULL,
         transport_ref_id INT NOT NULL,
         diet_ref_id INT NOT NULL,
-        utility_ref_id INT NOT NULL,
         lifestyle_ref_id INT NOT NULL,
+        user_point_id_ref INT NOT NULL,
         carbon_score FLOAT,
         date_of_entry DATE,
         FOREIGN KEY (signup_ref_id) REFERENCES SignupDetails(id) ON DELETE CASCADE,
         FOREIGN KEY (transport_ref_id) REFERENCES TransportDetails(transport_id) ON DELETE CASCADE,
         FOREIGN KEY (diet_ref_id) REFERENCES DietDetails(diet_id) ON DELETE CASCADE,
-        FOREIGN KEY (utility_ref_id) REFERENCES UtilityUsage(utility_id) ON DELETE CASCADE,
-        FOREIGN KEY (lifestyle_ref_id) REFERENCES LifestyleHabits(lifestyle_id) ON DELETE CASCADE
-    )
-    """)
-
-    # 4. Tables referencing DailyEntry
-    mycursor.execute("""
-    CREATE TABLE Employee_Points(
-        emp_point_id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL UNIQUE,
-        daily_entry_id INT NOT NULL,
-        date_earned DATE,
-        reason VARCHAR(100),
-        
-        FOREIGN KEY (daily_entry_id) REFERENCES DailyEntry(daily_id) ON DELETE CASCADE,
-        FOREIGN KEY (user_id) REFERENCES DailyEntry(user_id) ON DELETE CASCADE,
+        FOREIGN KEY (lifestyle_ref_id) REFERENCES LifestyleHabits(lifestyle_id) ON DELETE CASCADE,
+        FOREIGN KEY (user_point_id_ref) REFERENCES Employee_Points(emp_point_id) ON DELETE CASCADE
 
     )
     """)
+
+    
+    
     mycursor.execute("""
     CREATE TABLE Tips(
         tips_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -308,14 +294,14 @@ def create_tab():
 
 
 # Common function to populate all tables all at once
-def populate_tables():
-    user_input = int(input("Enter number of entries to insert: "))
-    signup_entry(user_input)
-    transport_data_insert(user_input)
-    diet_insert(user_input)
-    utility_entry(user_input)
-    lifestylehabits_entry(user_input)
-    daily_entry(user_input)
-    # comparison_insert(user_input)
-    tips_insert(user_input)
-    print(f"{user_input} entries added.Task Complete.")
+# def populate_tables():
+#     user_input = int(input("Enter number of entries to insert: "))
+#     signup_entry(user_input)
+#     transport_data_insert(user_input)
+#     diet_insert(user_input)
+#     # utility_entry(user_input)
+#     lifestylehabits_entry(user_input)
+#     daily_entry(user_input)
+#     # comparison_insert(user_input)
+#     tips_insert(user_input)
+#     print(f"{user_input} entries added.Task Complete.")
