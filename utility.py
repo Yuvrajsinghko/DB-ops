@@ -212,6 +212,8 @@ def create_tab():
         phone_no VARCHAR(100),
         email VARCHAR(255) NOT NULL,
         user_password VARCHAR(255) NOT NULL,
+        active_session VARCHAR(36) NULL,
+        last_active DATETIME NULL,
         date_joined DATE 
     )
     """)
@@ -246,13 +248,11 @@ def create_tab():
     )
     """)
     mycursor.execute("""
-    CREATE TABLE Employee_Points(
+    CREATE TABLE EmployeePoints(
         emp_point_id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
-        daily_entry_id INT NOT NULL,
         points_earned INT NOT NULL DEFAULT 0,
         date_earned DATE,
-        reason VARCHAR(100),
         FOREIGN KEY (user_id) REFERENCES SignupDetails(id) ON DELETE CASCADE
     )
     """)
